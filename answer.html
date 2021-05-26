@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>answer</title>
+		<link rel="stylesheet"  href="./style.css" />
+	</head>
+	<body>
+
+		<div>
+			<button id="localVideoButton">start/stop local video</button>
+			<br />
+			<video id="localVideo" autoplay></video>
+		</div>
+
+		<div>
+			<textarea id="sdpOffer" rows="10" cols="100"></textarea>
+			<br />
+			<button id="createAnswer">create answer</button>
+			<br />
+			<textarea id="sdpAnswer" rows="10" cols="100"></textarea>
+		</div>
+
+		<div id="icecandidates">
+		</div>
+
+		<div>
+			<textarea id="candidate" rows="10" cols="100"></textarea>
+			<br />
+			<button id="recieveCandidateButton">recieve candidate</button>
+		</div>
+
+		<div>
+			<video id="remoteVideo" autoplay></video>
+		</div>
+
+
+
+
+		<script src="answer.js"></script>
+	</body>
+</html>

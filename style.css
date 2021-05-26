@@ -1,0 +1,9 @@
+video {
+	width: 240px;
+	height: 180px;
+	border: 1px solid black;
+}
+
+button {
+	margin: 2px;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>offer</title>
+		<link rel="stylesheet"  href="./style.css" />
+	</head>
+	<body>
+		<div>
+			<button id="localVideoButton">start/stop local video</button>
+			<br />
+			<video id="localVideo" autoplay></video>
+		</div>
+
+		<div>
+			<button id="createOfferButton">create sdp offer</button>
+			<br />
+			<textarea id="sdpOffer" rows="10" cols="100"></textarea>
+		</div>
+
+		<div>
+			<textarea id="sdpAnswer" rows="10" cols="100"></textarea>
+			<br />
+			<button id="recieveAnswerButton">recieve sdp answer</button>
+		</div>
+
+		<div id="icecandidates">
+		</div>
+		
+		<div>
+			<textarea id="candidate" rows="10" cols="100"></textarea>
+			<br />
+			<button id="recieveCandidateButton">recieve candidate</button>
+		</div>
+
+		<div>
+			<video id="remoteVideo" autoplay></video>
+		</div>
+
+
+		<script src="offer.js"></script>
+	</body>
+</html>
