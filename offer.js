@@ -2,6 +2,7 @@
 
 let localVideoStream = null;
 let conn = null;
+let candidates = [];
 
 document
 	.getElementById("localVideoButton")
@@ -28,29 +29,36 @@ document
 		conn = new RTCPeerConnection({
 			iceServers: [
 				{
-					urls: [
-						"stun:stun.l.google.com:19302",
-						"stun:stun1.l.google.com:19302",
-						"stun:stun2.l.google.com:19302",
-						"stun:stun3.l.google.com:19302",
-						"stun:stun4.l.google.com:19302",
-					],
+					urls: ["stun:stun.l.google.com:19302"],
 				},
 			],
 		});
 		conn.addEventListener("connectionstatechange", console.log);
 		conn.addEventListener("icecandidate", (event) => {
-			console.log("icecandidate", event.candidate);
-			const d = document.createElement("div");
-			d.textContent = JSON.stringify(event.candidate);
-			document.getElementById("icecandidates").appendChild(d);
+			if (event.candidate) {
+				console.log("icecandidate", event.candidate);
+				candidates.push(event.candidate);
+			}
 		});
-		conn.addEventListener("icecandidateerror", console.log);
-		conn.addEventListener("iceconnectionstatechange", console.log);
-		conn.addEventListener("icegatheringstatechange", console.log);
+		conn.addEventListener("icecandidateerror", ({ errorCode, errorText }) => {
+			console.log("icecandidateerror", { errorCode, errorText });
+		});
+		conn.addEventListener("iceconnectionstatechange", (event) => {
+			console.log("iceconnectionstatechange", {
+				iceConnectionState: event.currentTarget.iceConnectionState,
+				iceGatheringState: event.currentTarget.iceGatheringState,
+			});
+		});
+		conn.addEventListener("icegatheringstatechange", (event) => {
+			console.log("icegatheringstatechange", {
+				iceConnectionState: event.currentTarget.iceConnectionState,
+				iceGatheringState: event.currentTarget.iceGatheringState,
+			});
+		});
 		conn.addEventListener("negotiationneeded", console.log);
 		conn.addEventListener("statsended", console.log);
 		conn.addEventListener("track", (event) => {
+			console.log("track", event);
 			const stream = event.streams[0];
 			document.getElementById("remoteVideo").srcObject = stream;
 		});
@@ -60,10 +68,17 @@ document
 		});
 
 		const offer = await conn.createOffer();
-		await conn.setLocalDescription(offer);
 
 		console.log("sdp offer", offer);
 		document.getElementById("sdpOffer").value = JSON.stringify(offer);
+	});
+
+document
+	.getElementById("setLocalDescriptionButtion")
+	.addEventListener("click", async (event) => {
+		const txt = document.getElementById("sdpOffer").value;
+		const offer = JSON.parse(txt);
+		await conn.setLocalDescription(offer);
 	});
 
 document
@@ -75,9 +90,18 @@ document
 	});
 
 document
+	.getElementById("showIceCandidatesButton")
+	.addEventListener("click", (event) => {
+		const txt = JSON.stringify(candidates);
+		document.getElementById("candidates").value = txt;
+	});
+
+document
 	.getElementById("recieveCandidateButton")
 	.addEventListener("click", async (event) => {
 		const txt = document.getElementById("candidate").value;
-		const candidate = JSON.parse(txt);
-		await conn.addIceCandidate(candidate);
+		const cs = JSON.parse(txt);
+		for (const candidate of cs) {
+			await conn.addIceCandidate(candidate);
+		}
 	});

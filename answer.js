@@ -56,6 +56,7 @@ document
 		conn.addEventListener("statsended", console.log);
 
 		conn.addEventListener("track", (event) => {
+			console.log("track", event);
 			const stream = event.streams[0];
 			document.getElementById("remoteVideo").srcObject = stream;
 		});
@@ -77,5 +78,7 @@ document
 	.addEventListener("click", async (event) => {
 		const txt = document.getElementById("candidate").value;
 		const candidate = JSON.parse(txt);
-		await conn.addIceCandidate(candidate);
+		for (const candidate of cs) {
+			await conn.addIceCandidate(candidate);
+		}
 	});
