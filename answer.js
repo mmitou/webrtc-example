@@ -2,6 +2,7 @@
 
 let localVideoStream = null;
 let conn = null;
+let candidates = [];
 
 document
 	.getElementById("localVideoButton")
@@ -31,23 +32,16 @@ document
 		conn = new RTCPeerConnection({
 			iceServers: [
 				{
-					urls: [
-						"stun:stun.l.google.com:19302",
-						"stun:stun1.l.google.com:19302",
-						"stun:stun2.l.google.com:19302",
-						"stun:stun3.l.google.com:19302",
-						"stun:stun4.l.google.com:19302",
-					],
+					urls: ["stun:stun.l.google.com:19302"],
 				},
 			],
 		});
 
 		conn.addEventListener("connectionstatechange", console.log);
 		conn.addEventListener("icecandidate", (event) => {
-			console.log("icecandidate", event.candidate);
-			const d = document.createElement("div");
-			d.textContent = JSON.stringify(event.candidate);
-			document.getElementById("icecandidates").appendChild(d);
+			if (event.candidate) {
+				candidates.push(event.candidate);
+			}
 		});
 		conn.addEventListener("icecandidateerror", console.log);
 		conn.addEventListener("iceconnectionstatechange", console.log);
@@ -71,6 +65,13 @@ document
 
 		console.log("answer", answer);
 		document.getElementById("sdpAnswer").value = JSON.stringify(answer);
+	});
+
+document
+	.getElementById("showIceCandidatesButton")
+	.addEventListener("click", (event) => {
+		const txt = JSON.stringify(candidates);
+		document.getElementById("candidates").value = txt;
 	});
 
 document
