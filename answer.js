@@ -77,7 +77,7 @@ document
 	.getElementById("recieveCandidateButton")
 	.addEventListener("click", async (event) => {
 		const txt = document.getElementById("candidate").value;
-		const candidate = JSON.parse(txt);
+		const cs = JSON.parse(txt);
 		for (const candidate of cs) {
 			await conn.addIceCandidate(candidate);
 		}
