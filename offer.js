@@ -4,6 +4,17 @@ let localVideoStream = null;
 let conn = null;
 let candidates = [];
 
+const iceServers = [
+	{
+		url: "stun:13.231.83.120:3478",
+	},
+	{
+		url: "turn:13.231.83.120:3478",
+		username: "foo",
+		credential: "bar",
+	},
+];
+
 document
 	.getElementById("localVideoButton")
 	.addEventListener("click", async (event) => {
@@ -27,11 +38,7 @@ document
 	.getElementById("createOfferButton")
 	.addEventListener("click", async (event) => {
 		conn = new RTCPeerConnection({
-			iceServers: [
-				{
-					urls: ["stun:stun.l.google.com:19302"],
-				},
-			],
+			iceServers: iceServers 
 		});
 		conn.addEventListener("connectionstatechange", console.log);
 		conn.addEventListener("icecandidate", (event) => {
